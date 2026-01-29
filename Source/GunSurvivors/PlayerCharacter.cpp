@@ -44,7 +44,19 @@ void APlayerCharacter::Tick(float DeltaTime)
 	}
 	FVector2D DistanceToMove = MovementDirection * MovementSpeed * DeltaTime;
 	FVector CurrentLocation = GetActorLocation();
-	FVector NewLocation = CurrentLocation + FVector(DistanceToMove.X, 0.0f, DistanceToMove.Y);
+	FVector NewLocation = CurrentLocation + FVector(DistanceToMove.X, 0.0f, 0.0f);
+	if (!IsInMapBoundsHorizontal(NewLocation.X))
+	{
+		NewLocation -= FVector(DistanceToMove.X, 0.0f, 0.0f);
+	}
+
+	NewLocation += FVector(0.0f, 0.0f, DistanceToMove.Y);
+	if (!IsInMapBoundsVertical(NewLocation.Z))
+	{
+		NewLocation -= FVector(0.0f, 0.0f, DistanceToMove.Y);
+	}
+
+
 	SetActorLocation(NewLocation);
 }
 
@@ -93,5 +105,23 @@ void APlayerCharacter::MoveCompleted(const FInputActionValue& Value)
 void APlayerCharacter::Shoot(const FInputActionValue& Value)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Shoot!"));
+}
+
+bool APlayerCharacter::IsInMapBoundsHorizontal(float XPos)
+{
+	bool Result = true;
+
+	Result =  (XPos > HorizontalLimits.X) && (XPos < HorizontalLimits.Y);
+
+	return Result;
+}
+
+bool APlayerCharacter::IsInMapBoundsVertical(float ZPos)
+{
+	bool Result = true;
+
+	Result = (ZPos > VerticalLimits.X) && (ZPos < VerticalLimits.Y);
+
+	return Result;
 }
 

@@ -50,9 +50,15 @@ public:
 	UPaperFlipbook* Idle;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperFlipbook* Run;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector2D HorizontalLimits;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector2D VerticalLimits;
 
 	void MoveTriggered(const FInputActionValue& Value);
 	void MoveCompleted(const FInputActionValue& Value);
-
 	void Shoot(const FInputActionValue& Value);
+	
+	bool IsInMapBoundsHorizontal(float XPos);
+	bool IsInMapBoundsVertical(float ZPos);
 };
