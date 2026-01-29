@@ -1,4 +1,5 @@
 #include "PlayerCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -9,6 +10,15 @@ APlayerCharacter::APlayerCharacter()
 
 	Flipbook = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Flipbook"));
 	Flipbook->SetupAttachment(CapsuleComp);
+
+	GunParent = CreateDefaultSubobject<USceneComponent>(TEXT("GunParent"));
+	GunParent->SetupAttachment(CapsuleComp);
+
+	GunSprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("GunSprite"));
+	GunSprite->SetupAttachment(GunParent);
+
+	BulletSpawnPosition = CreateDefaultSubobject<USceneComponent>(TEXT("BulletSpawnPosition"));
+	BulletSpawnPosition->SetupAttachment(GunSprite);
 }
 
 void APlayerCharacter::BeginPlay()
@@ -18,6 +28,8 @@ void APlayerCharacter::BeginPlay()
 	APlayerController* Player = Cast<APlayerController>(Controller);
 	if (Player)
 	{
+		Player->SetShowMouseCursor(true);
+
 		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(Player->GetLocalPlayer());
 		if (Subsystem)
 		{
@@ -30,34 +42,44 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!CanMove)
+	if (CanMove)
 	{
-		return;
-	}
-	if (MovementDirection.Length() <= 0.0f)
-	{
-		return;
-	}
-	if (MovementDirection.Length() > 1.0f)
-	{
-		MovementDirection.Normalize();
-	}
-	FVector2D DistanceToMove = MovementDirection * MovementSpeed * DeltaTime;
-	FVector CurrentLocation = GetActorLocation();
-	FVector NewLocation = CurrentLocation + FVector(DistanceToMove.X, 0.0f, 0.0f);
-	if (!IsInMapBoundsHorizontal(NewLocation.X))
-	{
-		NewLocation -= FVector(DistanceToMove.X, 0.0f, 0.0f);
+		if (MovementDirection.Length() > 0.0f)
+		{
+			if (MovementDirection.Length() > 1.0f)
+			{
+				MovementDirection.Normalize();
+			}
+			FVector2D DistanceToMove = MovementDirection * MovementSpeed * DeltaTime;
+			FVector CurrentLocation = GetActorLocation();
+			FVector NewLocation = CurrentLocation + FVector(DistanceToMove.X, 0.0f, 0.0f);
+			if (!IsInMapBoundsHorizontal(NewLocation.X))
+			{
+				NewLocation -= FVector(DistanceToMove.X, 0.0f, 0.0f);
+			}
+
+			NewLocation += FVector(0.0f, 0.0f, DistanceToMove.Y);
+			if (!IsInMapBoundsVertical(NewLocation.Z))
+			{
+				NewLocation -= FVector(0.0f, 0.0f, DistanceToMove.Y);
+			}
+			SetActorLocation(NewLocation);
+		}
 	}
 
-	NewLocation += FVector(0.0f, 0.0f, DistanceToMove.Y);
-	if (!IsInMapBoundsVertical(NewLocation.Z))
+	APlayerController* Player = Cast<APlayerController>(Controller);
+	if (Player)
 	{
-		NewLocation -= FVector(0.0f, 0.0f, DistanceToMove.Y);
+		FVector MouseWorldLocation, MouseWorldDirection;
+		Player->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
+
+		FVector Start = FVector(GetActorLocation().X, 0.0f, GetActorLocation().Z);
+		FVector Target = FVector(MouseWorldLocation.X, 0.0f, MouseWorldLocation.Z);
+
+		FRotator GunParentRotator = UKismetMathLibrary::FindLookAtRotation(Start, Target);
+
+		GunParent->SetRelativeRotation(GunParentRotator);
 	}
-
-
-	SetActorLocation(NewLocation);
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
