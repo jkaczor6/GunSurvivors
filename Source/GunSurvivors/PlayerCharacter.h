@@ -34,21 +34,22 @@ public:
 	UCapsuleComponent* CapsuleComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UPaperFlipbookComponent* Flipbook;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputMappingContext* IMC;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputAction* MoveAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputAction* ShootAction;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MovementSpeed = 100.0f;
 	UPROPERTY(BlueprintReadWrite)
 	FVector2D MovementDirection;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool CanMove = true;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperFlipbook* Idle;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperFlipbook* Run;
 
 	void MoveTriggered(const FInputActionValue& Value);
 	void MoveCompleted(const FInputActionValue& Value);

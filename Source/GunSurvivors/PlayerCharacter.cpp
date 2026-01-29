@@ -70,12 +70,24 @@ void APlayerCharacter::MoveTriggered(const FInputActionValue& Value)
 	if (CanMove)
 	{
 		MovementDirection = MoveActionValue;
+		Flipbook->SetFlipbook(Run);
+
+		FVector FlipbookScale = Flipbook->GetComponentScale();
+		if (MovementDirection.X < 0.0f && FlipbookScale.X > 0.0f)
+		{
+			Flipbook->SetWorldScale3D(FVector(-1.0f, 1.0f, 1.0f));
+		}
+		else if (MovementDirection.X > 0.0f && FlipbookScale.X < 0.0f)
+		{
+			Flipbook->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+		}
 	}
 }
 
 void APlayerCharacter::MoveCompleted(const FInputActionValue& Value)
 {
 	MovementDirection = FVector2D::Zero();
+	Flipbook->SetFlipbook(Idle);
 }
 
 void APlayerCharacter::Shoot(const FInputActionValue& Value)
