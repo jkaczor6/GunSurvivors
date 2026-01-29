@@ -15,17 +15,71 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	APlayerController* Player = Cast<APlayerController>(Controller);
+	if (Player)
+	{
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(Player->GetLocalPlayer());
+		if (Subsystem)
+		{
+			Subsystem->AddMappingContext(IMC, 0);
+		}
+	}
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!CanMove)
+	{
+		return;
+	}
+	if (MovementDirection.Length() <= 0.0f)
+	{
+		return;
+	}
+	if (MovementDirection.Length() > 1.0f)
+	{
+		MovementDirection.Normalize();
+	}
+	FVector2D DistanceToMove = MovementDirection * MovementSpeed * DeltaTime;
+	FVector CurrentLocation = GetActorLocation();
+	FVector NewLocation = CurrentLocation + FVector(DistanceToMove.X, 0.0f, DistanceToMove.Y);
+	SetActorLocation(NewLocation);
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (EnhancedInputComponent)
+	{
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this , &APlayerCharacter::MoveTriggered);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this , &APlayerCharacter::MoveCompleted);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Canceled, this , &APlayerCharacter::MoveCompleted);
+
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this , &APlayerCharacter::Shoot);
+	}
+}
+
+void APlayerCharacter::MoveTriggered(const FInputActionValue& Value)
+{
+	FVector2D MoveActionValue = Value.Get<FVector2D>();
+
+	if (CanMove)
+	{
+		MovementDirection = MoveActionValue;
+	}
+}
+
+void APlayerCharacter::MoveCompleted(const FInputActionValue& Value)
+{
+	MovementDirection = FVector2D::Zero();
+}
+
+void APlayerCharacter::Shoot(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Shoot!"));
 }
 
