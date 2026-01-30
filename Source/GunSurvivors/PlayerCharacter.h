@@ -13,6 +13,7 @@
 #include "Components/InputComponent.h"
 #include "InputActionValue.h"
 #include "GameFramework/Controller.h"
+#include "Engine/TimerHandle.h"
 
 #include "PlayerCharacter.generated.h"
 
@@ -63,10 +64,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector2D VerticalLimits;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool CanShoot = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ShootCooldownDurationInSeconds = 0.3f;
+
+	FTimerHandle ShootCooldownTimer;
+
 	void MoveTriggered(const FInputActionValue& Value);
 	void MoveCompleted(const FInputActionValue& Value);
 	void Shoot(const FInputActionValue& Value);
 	
 	bool IsInMapBoundsHorizontal(float XPos);
 	bool IsInMapBoundsVertical(float ZPos);
+	void OnShootCooldownTimerTimeout();
 };

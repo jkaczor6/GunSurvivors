@@ -126,7 +126,13 @@ void APlayerCharacter::MoveCompleted(const FInputActionValue& Value)
 
 void APlayerCharacter::Shoot(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Shoot!"));
+	if (CanShoot)
+	{
+		CanShoot = false;
+		GetWorldTimerManager().SetTimer(ShootCooldownTimer, this, &APlayerCharacter::OnShootCooldownTimerTimeout, 1.0f, false, ShootCooldownDurationInSeconds);
+
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Shoot!"));
+	}
 }
 
 bool APlayerCharacter::IsInMapBoundsHorizontal(float XPos)
@@ -145,5 +151,10 @@ bool APlayerCharacter::IsInMapBoundsVertical(float ZPos)
 	Result = (ZPos > VerticalLimits.X) && (ZPos < VerticalLimits.Y);
 
 	return Result;
+}
+
+void APlayerCharacter::OnShootCooldownTimerTimeout()
+{
+	CanShoot = true;
 }
 
