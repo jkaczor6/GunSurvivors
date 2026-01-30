@@ -129,9 +129,25 @@ void APlayerCharacter::Shoot(const FInputActionValue& Value)
 	if (CanShoot)
 	{
 		CanShoot = false;
-		GetWorldTimerManager().SetTimer(ShootCooldownTimer, this, &APlayerCharacter::OnShootCooldownTimerTimeout, 1.0f, false, ShootCooldownDurationInSeconds);
 
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Shoot!"));
+		ABullet* Bullet = GetWorld()->SpawnActor<ABullet>(BulletActorToSpawn, BulletSpawnPosition->GetComponentLocation(), FRotator(0.0f, 0.0f, 0.0f));
+		if (Bullet)
+		{
+			APlayerController* Player = Cast<APlayerController>(Controller);
+			if (Player)
+			{
+				FVector MouseWorldLocation, MouseWorldDirection;
+				Player->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
+
+				FVector CurrentLocation = GetActorLocation();
+				FVector2D BulletDirection = FVector2D(MouseWorldLocation.X - CurrentLocation.X, MouseWorldLocation.Z - CurrentLocation.Z);
+				BulletDirection.Normalize();
+
+				Bullet->Launch(BulletDirection, BulletSpeed);
+			}
+		}
+
+		GetWorldTimerManager().SetTimer(ShootCooldownTimer, this, &APlayerCharacter::OnShootCooldownTimerTimeout, 1.0f, false, ShootCooldownDurationInSeconds);
 	}
 }
 

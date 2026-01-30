@@ -13,7 +13,9 @@
 #include "Components/InputComponent.h"
 #include "InputActionValue.h"
 #include "GameFramework/Controller.h"
+
 #include "Engine/TimerHandle.h"
+#include "Bullet.h"
 
 #include "PlayerCharacter.generated.h"
 
@@ -70,6 +72,12 @@ public:
 	float ShootCooldownDurationInSeconds = 0.3f;
 
 	FTimerHandle ShootCooldownTimer;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<ABullet> BulletActorToSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float BulletSpeed = 300.0f;
 
 	void MoveTriggered(const FInputActionValue& Value);
 	void MoveCompleted(const FInputActionValue& Value);
