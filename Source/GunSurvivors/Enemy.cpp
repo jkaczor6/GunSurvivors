@@ -45,6 +45,19 @@ void AEnemy::Tick(float DeltaTime)
 			FVector NewLocation = CurrentLocation + DirectionToPlayer * MovementSpeed * DeltaTime;
 			SetActorLocation(NewLocation);
 		}
+
+		CurrentLocation = GetActorLocation();
+		float FlipbookXScale = EnemyFlipbook->GetComponentScale().X;
+
+		if ((PlayerLocation.X - CurrentLocation.X) >= 0.0f)
+		{
+			if(FlipbookXScale < 0.0f) EnemyFlipbook->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+			
+		}
+		else
+		{
+			if (FlipbookXScale > 0.0f) EnemyFlipbook->SetWorldScale3D(FVector(-1.0f, 1.0f, 1.0f));
+		}
 	}
 }
 
