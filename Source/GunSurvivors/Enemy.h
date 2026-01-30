@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "PlayerCharacter.h"
+#include "Engine/TimerHandle.h"
 
 #include "Enemy.generated.h"
 
@@ -39,4 +40,11 @@ public:
 	float MovementSpeed = 50.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float StopDistance = 20.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPaperFlipbook* DeadFP;
+
+	FTimerHandle DestroyTimer;
+
+	void Die();
+	void OnDestroyTimerTimeout();
 };
