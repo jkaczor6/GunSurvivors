@@ -6,9 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "GunSurvivorsGameMode.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FScoreChangedDelegate, int, NewScore);
+
 UCLASS()
 class GUNSURVIVORS_API AGunSurvivorsGameMode : public AGameModeBase
 {
@@ -17,6 +16,9 @@ class GUNSURVIVORS_API AGunSurvivorsGameMode : public AGameModeBase
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int Score = 0;
+
+	UPROPERTY(BlueprintAssignable)
+	FScoreChangedDelegate ScoreChangeDelegate;
 
 	void AddScore(int ScoreToAdd);
 };
