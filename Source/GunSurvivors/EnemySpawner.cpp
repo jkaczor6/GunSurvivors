@@ -10,6 +10,12 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	AActor* ReturnedActor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass());
+	if (ReturnedActor)
+	{
+		Player = Cast<APlayerCharacter>(ReturnedActor);
+	}
+
 	StartSpawning();
 }
 
@@ -43,6 +49,7 @@ void AEnemySpawner::SpawnEnemy()
 	FVector EnemyLocation = GetActorLocation() + FVector(RandomPosition.X, 0.0f, RandomPosition.Y);
 
 	AEnemy* SpawnedEnemy = GetWorld()->SpawnActor<AEnemy>(Enemy, EnemyLocation, FRotator::ZeroRotator);
+	SetupEnemy(SpawnedEnemy);
 
 	EnemiesSpawned++;
 	if ((EnemiesSpawned % EnemyInterval) == 0 && spawnTime > SpawnTimeMinimumLimit)
@@ -55,5 +62,14 @@ void AEnemySpawner::SpawnEnemy()
 
 		StopSpawning();
 		StartSpawning();
+	}
+}
+
+void AEnemySpawner::SetupEnemy(AEnemy* Enemy)
+{
+	if (Enemy)
+	{
+		Enemy->Player = Player;
+		Enemy->CanFollow = true;
 	}
 }

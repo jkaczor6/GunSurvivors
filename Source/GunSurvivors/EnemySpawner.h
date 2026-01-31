@@ -5,6 +5,8 @@
 
 #include "Enemy.h"
 #include "Engine/TimerHandle.h"
+#include "PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "EnemySpawner.generated.h"
 
@@ -37,6 +39,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int EnemiesSpawned = 0;
 
+	APlayerCharacter* Player;
 
 	FTimerHandle SpawnTimer;
 

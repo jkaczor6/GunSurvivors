@@ -15,15 +15,6 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (!Player)
-	{
-		AActor* ReturnedActor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass());
-		if (ReturnedActor)
-		{
-			Player = Cast<APlayerCharacter>(ReturnedActor);
-			CanFollow = true;
-		}
-	}
 }
 
 void AEnemy::Tick(float DeltaTime)
