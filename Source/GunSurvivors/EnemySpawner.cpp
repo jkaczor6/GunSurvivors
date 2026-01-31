@@ -84,5 +84,5 @@ void AEnemySpawner::SetupEnemy(AEnemy* Enemy)
 
 void AEnemySpawner::OnEnemyDied()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Enemy died"));
+	GM->AddScore(ScorePerEnemy);
 }

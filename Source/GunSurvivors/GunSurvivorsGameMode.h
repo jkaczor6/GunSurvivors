@@ -14,4 +14,9 @@ class GUNSURVIVORS_API AGunSurvivorsGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int Score = 0;
+
+	void AddScore(int ScoreToAdd);
 };

@@ -3,3 +3,8 @@
 
 #include "GunSurvivorsGameMode.h"
 
+void AGunSurvivorsGameMode::AddScore(int ScoreToAdd)
+{
+	Score += ScoreToAdd;
+	UE_LOG(LogTemp, Display, TEXT("Score: %d"), Score)
+}

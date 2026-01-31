@@ -37,6 +37,8 @@ public:
 	float DifficultyDecreaseNumber = 0.05f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SpawnTimeMinimumLimit = 0.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int ScorePerEnemy = 100;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int EnemiesSpawned = 0;
 
