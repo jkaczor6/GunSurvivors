@@ -28,6 +28,15 @@ public:
 	float spawnTime = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float spawnDistance = 400.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int EnemyInterval = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DifficultyDecreaseNumber = 0.05f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpawnTimeMinimumLimit = 0.5f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int EnemiesSpawned = 0;
+
 
 	FTimerHandle SpawnTimer;
 
