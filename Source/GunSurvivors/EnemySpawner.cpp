@@ -10,6 +10,13 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	AGameModeBase* Gamemode = UGameplayStatics::GetGameMode(GetWorld());
+	if (Gamemode)
+	{
+		GM = Cast<AGunSurvivorsGameMode>(Gamemode);
+		check(GM);
+	}
+
 	AActor* ReturnedActor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass());
 	if (ReturnedActor)
 	{
@@ -48,7 +55,7 @@ void AEnemySpawner::SpawnEnemy()
 
 	FVector EnemyLocation = GetActorLocation() + FVector(RandomPosition.X, 0.0f, RandomPosition.Y);
 
-	AEnemy* SpawnedEnemy = GetWorld()->SpawnActor<AEnemy>(Enemy, EnemyLocation, FRotator::ZeroRotator);
+	AEnemy* SpawnedEnemy = GetWorld()->SpawnActor<AEnemy>(EnemyToSpawn, EnemyLocation, FRotator::ZeroRotator);
 	SetupEnemy(SpawnedEnemy);
 
 	EnemiesSpawned++;
@@ -71,5 +78,11 @@ void AEnemySpawner::SetupEnemy(AEnemy* Enemy)
 	{
 		Enemy->Player = Player;
 		Enemy->CanFollow = true;
+		Enemy->EnemyDiedDelegate.AddDynamic(this, &AEnemySpawner::OnEnemyDied);
 	}
+}
+
+void AEnemySpawner::OnEnemyDied()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("Enemy died"));
 }

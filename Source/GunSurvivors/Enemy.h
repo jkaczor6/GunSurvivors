@@ -12,6 +12,8 @@
 
 #include "Enemy.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyDiedDelegate);
+
 UCLASS()
 class GUNSURVIVORS_API AEnemy : public AActor
 {
@@ -44,6 +46,8 @@ public:
 	UPaperFlipbook* DeadFP;
 
 	FTimerHandle DestroyTimer;
+
+	FEnemyDiedDelegate EnemyDiedDelegate;
 
 	void Die();
 	void OnDestroyTimerTimeout();

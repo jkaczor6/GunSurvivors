@@ -7,6 +7,7 @@
 #include "Engine/TimerHandle.h"
 #include "PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "GunSurvivorsGameMode.h"
 
 #include "EnemySpawner.generated.h"
 
@@ -25,7 +26,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AEnemy> Enemy;
+	TSubclassOf<AEnemy> EnemyToSpawn;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float spawnTime = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -42,9 +43,14 @@ public:
 	APlayerCharacter* Player;
 
 	FTimerHandle SpawnTimer;
+	AGunSurvivorsGameMode* GM;
 
 	void OnSpawnTimerTimeout();
 	void StartSpawning();
 	void StopSpawning();
 	void SpawnEnemy();
+	void SetupEnemy(AEnemy* Enemy);
+
+	UFUNCTION()
+	void OnEnemyDied();
 };
