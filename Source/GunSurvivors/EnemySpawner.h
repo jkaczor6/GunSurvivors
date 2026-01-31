@@ -55,4 +55,6 @@ public:
 
 	UFUNCTION()
 	void OnEnemyDied();
+	UFUNCTION()
+	void OnPlayerDied();
 };

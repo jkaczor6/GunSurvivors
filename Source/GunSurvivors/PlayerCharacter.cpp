@@ -1,5 +1,6 @@
 #include "PlayerCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Enemy.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -36,6 +37,7 @@ void APlayerCharacter::BeginPlay()
 			Subsystem->AddMappingContext(IMC, 0);
 		}
 	}
+	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OverlapBegin);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -174,3 +176,18 @@ void APlayerCharacter::OnShootCooldownTimerTimeout()
 	CanShoot = true;
 }
 
+void APlayerCharacter::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AEnemy* Enemy = Cast<AEnemy>(OtherActor);
+	if (Enemy && Enemy->IsAlive)
+	{
+		if (IsAlive)
+		{
+			IsAlive = false;
+			CanMove = false;
+			CanShoot = false;
+
+			PlayerDiedDelegate.Broadcast();
+		}
+	}
+}
