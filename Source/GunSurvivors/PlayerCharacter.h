@@ -14,6 +14,8 @@
 #include "InputActionValue.h"
 #include "GameFramework/Controller.h"
 
+#include "Sound/SoundBase.h"
+
 #include "Engine/TimerHandle.h"
 #include "Bullet.h"
 
@@ -84,6 +86,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float BulletSpeed = 300.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundBase* ShootSound;
+
 
 	void MoveTriggered(const FInputActionValue& Value);
 	void MoveCompleted(const FInputActionValue& Value);

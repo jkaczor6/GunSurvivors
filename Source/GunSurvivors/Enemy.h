@@ -9,6 +9,8 @@
 
 #include "PlayerCharacter.h"
 #include "Engine/TimerHandle.h"
+#include "Sound/SoundBase.h"
+
 
 #include "Enemy.generated.h"
 

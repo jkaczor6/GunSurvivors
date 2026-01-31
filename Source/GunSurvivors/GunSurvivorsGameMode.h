@@ -23,7 +23,7 @@ public:
 	int Score = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TimeBeforeRestart = 0.3f;
+	float TimeBeforeRestart = 1.0f;
 
 	UPROPERTY(BlueprintAssignable)
 	FScoreChangedDelegate ScoreChangeDelegate;

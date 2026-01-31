@@ -123,7 +123,10 @@ void APlayerCharacter::MoveTriggered(const FInputActionValue& Value)
 void APlayerCharacter::MoveCompleted(const FInputActionValue& Value)
 {
 	MovementDirection = FVector2D::Zero();
-	Flipbook->SetFlipbook(Idle);
+	if (IsAlive)
+	{
+		Flipbook->SetFlipbook(Idle);
+	}
 }
 
 void APlayerCharacter::Shoot(const FInputActionValue& Value)
@@ -144,6 +147,8 @@ void APlayerCharacter::Shoot(const FInputActionValue& Value)
 				FVector CurrentLocation = GetActorLocation();
 				FVector2D BulletDirection = FVector2D(MouseWorldLocation.X - CurrentLocation.X, MouseWorldLocation.Z - CurrentLocation.Z);
 				BulletDirection.Normalize();
+
+				UGameplayStatics::PlaySound2D(GetWorld(), ShootSound);
 
 				Bullet->Launch(BulletDirection, BulletSpeed);
 			}
@@ -173,7 +178,10 @@ bool APlayerCharacter::IsInMapBoundsVertical(float ZPos)
 
 void APlayerCharacter::OnShootCooldownTimerTimeout()
 {
-	CanShoot = true;
+	if (IsAlive)
+	{
+		CanShoot = true;
+	}
 }
 
 void APlayerCharacter::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -85,12 +85,14 @@ void AEnemySpawner::SetupEnemy(AEnemy* Enemy)
 
 void AEnemySpawner::OnEnemyDied()
 {
+	UGameplayStatics::PlaySound2D(GetWorld(), DeathSound);
 	GM->AddScore(ScorePerEnemy);
 }
 
 void AEnemySpawner::OnPlayerDied()
 {
 	StopSpawning();
+	UGameplayStatics::PlaySound2D(GetWorld(), DeathSound);
 
 	TArray<AActor*> EnemyArray;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemy::StaticClass(), EnemyArray);
@@ -103,5 +105,5 @@ void AEnemySpawner::OnPlayerDied()
 		}
 	}
 
-	GM->RestartGame();
+	GM->OnRestartGameTimerTimeout();
 }

@@ -8,6 +8,7 @@
 #include "PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "GunSurvivorsGameMode.h"
+#include "Sound/SoundBase.h"
 
 #include "EnemySpawner.generated.h"
 
@@ -41,6 +42,8 @@ public:
 	int ScorePerEnemy = 100;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int EnemiesSpawned = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundBase* DeathSound;
 
 	APlayerCharacter* Player;
 
